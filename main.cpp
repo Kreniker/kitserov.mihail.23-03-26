@@ -46,6 +46,30 @@ bool test5()
         return false;
     }
 }
+bool test6()
+{
+    constexpr size_t size = 3ull;
+    const Vector<int> v(size);
+    try {
+        v.at(0);
+        return true;
+    } catch(...) {
+        return false;
+    }
+}
+bool test7()
+{
+    constexpr size_t size = 3ull;
+    const Vector<int> v(size);
+    try {
+        v.at(size + 1);
+        return false;
+    } catch(const std::out_of_range&) {
+        return true;
+    } catch(...) {
+        return false;
+    }
+}
 
 int main()
 {
@@ -56,7 +80,9 @@ int main()
         {test2, "Default vector must has zero size"},
         {test3, "Vector constructor with size has non-zero size"},
         {test4, "In range access does not generate exceptions"},
-        {test5, "Out of range access generates std::out_of_ranges exceptions"}
+        {test5, "Out of range access generates std::out_of_ranges exceptions"},
+        {test6, "In range access for const Vector does not generate exceptions"},
+        {test7, "Out of range access for const Vector generates std::out_of_ranges exceptions"}
     };
     size_t count = sizeof(tests) / sizeof(case_t);
     std::cout << std::boolalpha;
