@@ -86,8 +86,18 @@ int main()
     };
     size_t count = sizeof(tests) / sizeof(case_t);
     std::cout << std::boolalpha;
+    bool result = true;
+    size_t successes = 0, fails = 0;
     for(size_t i = 0; i < count; ++i) {
-        std::cout << tests[i].first() << ": " << tests[i].second << "\n";
+        bool case_result = tests[i].first();
+        successes += case_result;
+        fails += !case_result;
+        result = result && case_result;
+        std::cout << case_result << ": " << tests[i].second << "\n";
     }
+    std::cout << "SUMMARY\n";
+    std::cout << result << ": TEST_RESULT\n";
+    std::cout << fails << ": failed_tests\n";
+    std::cout << successes << ": successes_tests\n";
     return 0;
 }
