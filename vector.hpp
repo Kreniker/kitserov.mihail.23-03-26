@@ -3,7 +3,8 @@
 
 #include <cstddef>
 #include <stdexcept>
-namespace topit {
+namespace topit 
+{
     template < class T >
     struct Vector
     {
@@ -13,6 +14,10 @@ namespace topit {
       Vector<T>& operator=(const Vector<T>&) = delete;
       bool isEmpty() const noexcept;
       size_t getSize() const noexcept;
+      size_t getCapacity() const noexcept;
+
+      void pushBack(const T& val);
+
       T& operator[](size_t id) noexcept;
       const T& operator[](size_t id) const noexcept;
       T& at(size_t id);
@@ -25,6 +30,8 @@ namespace topit {
     };
     template<class T>
     bool operator==(const Vector<T>& v1, const Vector<T>& v2);
+    template<class T>
+    bool operator!=(const Vector<T>& v1, const Vector<T>& v2);
 }
 template < class T >
 topit::Vector<T>::Vector(): data_(nullptr), size_(0), capacity_(0)
