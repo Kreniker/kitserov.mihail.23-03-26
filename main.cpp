@@ -19,13 +19,13 @@ bool test2()
 bool test3()
 {
     constexpr size_t size = 3ull;
-    Vector<int> v(size);
+    Vector<int> v(size, 0);
     return v.getSize() == size;
 }
 bool test4()
 {
     constexpr size_t size = 3ull;
-    Vector<int> v(size);
+    Vector<int> v(size, 0);
     try {
         v.at(0);
         return true;
@@ -36,7 +36,7 @@ bool test4()
 bool test5()
 {
     constexpr size_t size = 3ull;
-    Vector<int> v(size);
+    Vector<int> v(size, 0);
     try {
         v.at(size + 1);
         return false;
@@ -49,7 +49,7 @@ bool test5()
 bool test6()
 {
     constexpr size_t size = 3ull;
-    const Vector<int> v(size);
+    const Vector<int> v(size, 0);
     try {
         v.at(0);
         return true;
@@ -60,7 +60,7 @@ bool test6()
 bool test7()
 {
     constexpr size_t size = 3ull;
-    const Vector<int> v(size);
+    const Vector<int> v(size, 0);
     try {
         v.at(size + 1);
         return false;

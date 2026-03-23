@@ -8,7 +8,7 @@ namespace topit {
     struct Vector
     {
       Vector();
-      explicit Vector(size_t s);
+      Vector(size_t size, const T& val);
       ~Vector();
       Vector<T>& operator=(const Vector<T>&) = delete;
       bool isEmpty() const noexcept;
@@ -21,6 +21,7 @@ namespace topit {
     private:
       T* data_;
       size_t size_, capacity_;
+      explicit Vector(size_t size);
     };
     template<class T>
     bool operator==(const Vector<T>& v1, const Vector<T>& v2);
@@ -52,12 +53,29 @@ topit::Vector<T>::Vector(size_t size):
 template<class T>
 T& topit::Vector<T>::at(size_t id)
 {
-  throw std::logic_error("bad id");
+  return const_cast< T& >(static_cast< const Vector< T >* >(this) -> at(id));
 }
 template<class T>
 const T& topit::Vector<T>::at(size_t id) const
 {
-  throw std::logic_error("bad id");
+    if (id < getSize()) {
+        return data_[id];
+    }
+  throw std::out_of_range("bad id");
 }
- 
+template<class T>
+topit::Vector<T>::Vector(size_t size, const T& val):
+ data_(size ? new T[size] : nullptr),
+ size_(size),
+ capacity_(size)
+{
+  for (size_t i = 0; i < size; i++) {
+    try {
+        data_[i] = val;
+    } catch(...) {
+        delete[] data_;
+    }
+  }
+} 
+
 #endif
