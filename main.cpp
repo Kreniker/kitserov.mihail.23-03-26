@@ -1,12 +1,23 @@
 #include "vector.hpp"
-#include <iostream>
+#include <cstddef>
+#include <iostream > 
 #include <ratio>
+
+bool test1()
+{
+    using topit::Vector;
+    Vector< int > v;
+    return v.isEmpty();
+}
+
 int main()
 {
-    using namespace topit;
-    Vector< int > v1;
-    Vector< int > v2;
-    if (v1 == v2) {
-        //
+    using test_t = bool(*)();
+    test_t tests[] = {
+        test1
+    };
+    size_t count = sizeof(tests) / sizeof(tests[0]);
+    for(size_t i = 0; i < count; ++i) {
+        std::cout << tests[i]() << ": " << i << "\n";
     }
 }
