@@ -78,5 +78,10 @@ topit::Vector<T>::Vector(size_t size, const T& val):
     data_[i] = val;
   }
 } 
+template<class T>
+size_t topit::Vector<T>::getCapacity() const noexcept
+{
+  return capacity_;
+}
 
 #endif
