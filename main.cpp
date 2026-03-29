@@ -28,7 +28,8 @@ bool test4()
     Vector<int> v(size, 1);
     try {
         int& value = v.at(0);
-        return value == 1;
+        int& value1 = v[0];
+        return value == 1 and value1 == 1;
     } catch(...) {
         return false;
     }
@@ -52,7 +53,8 @@ bool test6()
     const Vector<int> v(size, 1);
     try {
         const int& value = v.at(0);
-        return value == 1;
+        const int& value1 = v[0];
+        return value == 1 and value1 == 1;
     } catch(...) {
         return false;
     }

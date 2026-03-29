@@ -108,4 +108,20 @@ const T& topit::Vector<T>::operator[](size_t id) const noexcept
 {
   return data_[id];
 }
+
+template<class T>
+bool topit::operator==(const Vector<T>& v1, const Vector<T>& v2) {
+    if (v1.getSize() != v2.getSize())
+        return false;
+    for (size_t i = 0; i < v1.getSize(); ++i) {
+        if (v1[i] != v2[i])
+            return false;
+    }
+    return true;
+}
+
+template<class T>
+bool topit::operator!=(const Vector<T>& v1, const Vector<T>& v2) {
+    return !(v1 == v2);
+}
 #endif
