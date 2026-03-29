@@ -83,5 +83,29 @@ size_t topit::Vector<T>::getCapacity() const noexcept
 {
   return capacity_;
 }
-
+template<class T>
+void topit::Vector<T>::pushBack(const T& val)
+{
+  if (size_ >= capacity_) {
+    size_t newCap = (capacity_ == 0) ? 1 : capacity_ * 2;
+	T* newData = new T[newCap];
+    for (size_t i = 0; i < size_; ++i) {
+      newData[i] = data_[i];
+    }
+    delete[] data_;
+    data_ = newData;
+    capacity_ = newCap;
+  }
+  data_[size_++] = val;
+}
+template<class T>
+T& topit::Vector<T>::operator[](size_t id) noexcept
+{
+  return data_[id];
+}
+template<class T>
+const T& topit::Vector<T>::operator[](size_t id) const noexcept
+{
+  return data_[id];
+}
 #endif

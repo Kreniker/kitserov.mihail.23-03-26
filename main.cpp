@@ -20,7 +20,7 @@ bool test3()
 {
     constexpr size_t size = 3ull;
     Vector<int> v(size, 0);
-    return v.getSize() == size;
+    return v.getSize() == size && v.getCapacity() == size;
 }
 bool test4()
 {
@@ -78,7 +78,7 @@ int main()
     case_t tests[] = {
         {test1, "Default constructor vector must be empty"},
         {test2, "Default vector must has zero size"},
-        {test3, "Vector constructor with size has non-zero size"},
+        {test3, "Vector constructor with size has non-zero size and capacity"},
         {test4, "In range access does not generate exceptions"},
         {test5, "Out of range access generates std::out_of_ranges exceptions"},
         {test6, "In range access for const Vector does not generate exceptions"},
