@@ -72,6 +72,29 @@ bool test7()
         return false;
     }
 }
+bool test8() {
+	Vector< int > v(2, 0);
+	Vector< int > ya = v;
+	return ya == v;
+}
+bool test9() {
+	Vector< int > v;
+	Vector<int> ya(2, 0);
+	bool res = v != ya;
+	v = ya;
+	return res && v == ya;
+}
+bool test10() {
+	Vector<int> v(2, 0);
+	Vector<int> yav(3, 1);
+
+	Vector<int> cpy_v(v);
+	Vector<int> cpy_yav(yav);
+
+	v.swap(yav);
+
+	return cpy_v == yav && cpy_yav == v;
+}
 
 int main()
 {
@@ -84,7 +107,10 @@ int main()
         {test4, "In range access does not generate exceptions"},
         {test5, "Out of range access generates std::out_of_ranges exceptions"},
         {test6, "In range access for const Vector does not generate exceptions"},
-        {test7, "Out of range access for const Vector generates std::out_of_ranges exceptions"}
+        {test7, "Out of range access for const Vector generates std::out_of_ranges exceptions"},
+        {test8, "Copy constant"},
+        {test9, "copy assignment operator"},
+        {test10, "Swap for two vectors"}
     };
     size_t count = sizeof(tests) / sizeof(case_t);
     std::cout << std::boolalpha;
