@@ -16,6 +16,7 @@ namespace topit
 		VectorIterator operator+(size_t n);
 		VectorIterator operator-(size_t n);
 		T& operator[](size_t n) const;
+		size_t operator-(const VectorIterator& other) const { return ptr_ - other.ptr_; }
 		bool operator==(const VectorIterator& other) const { return ptr_ == other.ptr_; }
 	    bool operator!=(const VectorIterator& other) const { return ptr_ != other.ptr_; }
 	    bool operator<(const VectorIterator& other) const { return ptr_ < other.ptr_; }
@@ -37,6 +38,7 @@ namespace topit
     	ConstVectorIterator operator+(size_t n) const { return ConstVectorIterator(ptr_ + n); }
 	    ConstVectorIterator operator-(size_t n) const { return ConstVectorIterator(ptr_ - n); }
 	    T& operator[](size_t n) const { return ptr_[n]; }
+	    size_t operator-(const ConstVectorIterator& other) const { return ptr_ - other.ptr_; }
 	    bool operator==(const ConstVectorIterator& other) const { return ptr_ == other.ptr_; }
 		bool operator!=(const ConstVectorIterator& other) const { return ptr_ != other.ptr_; }
     	bool operator<(const ConstVectorIterator& other) const { return ptr_ < other.ptr_; }
@@ -72,6 +74,11 @@ namespace topit
 
 	  void swap(Vector<T>& rhs) noexcept;
 
+	  VectorIterator<T> begin();
+	  VectorIterator<T> end();
+
+	  ConstVectorIterator<T> cbegin() const;
+	  ConstVectorIterator<T> cend() const;
 	  ///////////////////////
 	  //КЗ (copy, swap)
 	  // Протестировать
@@ -81,13 +88,15 @@ namespace topit
 	  //////////////////
 	  // ДЗ
 	  // 1. Реализовать итераторы. Тестировать не нужно
-	  // 2. Придумать по 3 штуки insert/erase с итераторами. (нужны ещё константные итераторы, значит в Сумме 6)
-	  struct VectorIterator;
-	  void insert(VectorIterator pos, const T& val);
-	  void erase(VectorIterator pos);
-/////////////////////////////////////////////
-	  template< class IT >
-	  void insert(VectorIterator pos, IT begin, IT end);
+	  // 2. Придумать по 3 штуки insert/erase с итераторами
+	  void insert(VectorIterator<T> pos, const T& val);
+	  void insert(VectorIterator<T> pos, size_t count, const T& val);
+	  template<class IT>
+	  void insert(VectorIterator<T> pos, IT first, IT last);
+	  void erase(VectorIterator<T> pos);
+	  void erase(VectorIterator<T> first, VectorIterator<T> last);
+	  void erase(VectorIterator<T> pos, size_t count);
+	  
     private:
       T* data_;
       size_t size_, capacity_;
@@ -369,5 +378,84 @@ template<class T>
 T& topit::VectorIterator<T>::operator[](size_t n) const
 {
 	return ptr_[n];
+}
+
+///////////////////////////////////////////////////////////////////////
+template<class T>
+topit::VectorIterator<T> topit::Vector<T>::begin()
+{
+	return VectorIterator<T>(data_);
+}
+
+template<class T>
+topit::VectorIterator<T> topit::Vector<T>::end()
+{
+	return VectorIterator<T>(data_ + size_);
+}
+
+template<class T>
+topit::ConstVectorIterator<T> topit::Vector<T>::cbegin() const
+{
+	return ConstVectorIterator<T>(data_);
+}
+
+template<class T>
+topit::ConstVectorIterator<T> topit::Vector<T>::cend() const
+{
+	return ConstVectorIterator<T>(data_ + size_);
+}
+
+template<class T>
+void topit::Vector<T>::insert(VectorIterator<T> pos, const T& val) {
+    size_t index = pos - begin();
+    insert(index, val);
+}
+
+template<class T>
+void topit::Vector<T>::insert(VectorIterator<T> pos, size_t count, const T& val)
+{
+	if (count == 0) return;
+	size_t index = pos - begin();
+	Vector<T> temp(count, val);
+	insert(index, temp, 0, temp.size());
+}
+
+template< class T>
+template<class IT>
+void topit::Vector<T>::insert(VectorIterator<T> pos, IT first, IT last)
+{
+	if (first == last) return;
+	size_t index = pos - begin();
+	Vector<T> temp;
+	for (IT it = first; it != last; ++it) {
+	    temp.pushBack(*it);
+	}
+	insert(index, temp, 0, temp.size());
+}
+
+template<class T>
+void topit::Vector<T>::erase(VectorIterator<T> pos) {
+    size_t index = pos - begin();
+    erase(index);
+}
+
+template<class T>
+void topit::Vector<T>::erase(VectorIterator<T> first, VectorIterator<T> last) {
+    if (first == last) return;
+    size_t idx_first = first - begin();
+    size_t idx_last  = last - begin();
+    size_t count = idx_last - idx_first;
+    for (size_t i = 0; i < count; ++i) {
+        erase(idx_first);
+    }
+}
+
+template<class T>
+void topit::Vector<T>::erase(VectorIterator<T> pos, size_t count) {
+    if (count == 0) return;
+    size_t index = pos - begin();
+    for (size_t i = 0; i < count; ++i) {
+        erase(index);
+    }
 }
 #endif
