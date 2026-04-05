@@ -209,8 +209,10 @@ void topit::Vector<T>::insert(size_t pos, const T& val)
 		throw std::out_of_range("Invalid pos for insert");
 	}
 	T* new_data = nullptr;
+	size_t newCap = capacity_;
 	if (capacity_ == size_) {
-		new_data = new T[capacity_ * 2];
+		newCap = capacity_ * 2;
+		new_data = new T[newCap];
 	}
 	try {
 		for (size_t i = 0; i < pos; i++) {
@@ -226,5 +228,28 @@ void topit::Vector<T>::insert(size_t pos, const T& val)
 	}
 	data_ = new_data;
 	size_ = size_ + 1;
+	capacity_ = newCap;
+}
+
+template<class T>
+void topit::Vector<T>::insert(size_t pos, const Vector<T> rhs, size_t beg, size_t e)
+{
+	if (pos > size_) {
+        throw std::out_of_range("Vector::insert (range): pos out of range");
+    }
+    if (beg > e || e > rhs.size_) {
+        throw std::out_of_range("Vector::insert (range): invalid range");
+    }
+    size_t count = e - beg;
+    size_t newPos = pos;
+    Vector<T> cpy(*this);
+    try {
+	    for (size_t i = 0; i < count; i++) {
+	    	cpy.insert(newPos++, rhs.data_[beg + i]);
+	    }
+	} catch(...) {
+		throw;
+	}
+	*this(cpy);
 }
 #endif
