@@ -44,12 +44,7 @@ namespace topit
 	  struct VectorIterator;
 	  void insert(VectorIterator pos, const T& val);
 	  void erase(VectorIterator pos);
-	  //////////////////////////
-	  /*
-	  if (this == addressof(rhs)) {
-	  	return *this;
-	  }
-	  */
+/////////////////////////////////////////////
 	  template< class IT >
 	  void insert(VectorIterator pos, IT begin, IT end);
     private:
@@ -208,13 +203,18 @@ void topit::Vector<T>::insert(size_t pos, const T& val)
 	if (pos > size_) {
 		throw std::out_of_range("Invalid pos for insert");
 	}
+	
     if (size_ < capacity_) {
-        for (size_t i = size_; i > pos; --i) {
-            data_[i] = data_[i - 1];
-        }
-        data_[pos] = val;
-        ++size_;
-        return;
+    	try {
+	        for (size_t i = size_; i > pos; --i) {
+	            data_[i] = data_[i - 1];
+	        }
+	        data_[pos] = val;
+	        ++size_;
+	        return;
+	    } catch(...) {
+	    	throw;
+	    }
     }
     size_t newCap = (capacity_ == 0) ? 1 : capacity_ * 2;
     T* new_data = new T[newCap];
@@ -256,5 +256,29 @@ void topit::Vector<T>::insert(size_t pos, const Vector<T> rhs, size_t beg, size_
 		throw;
 	}
 	this->swap(cpy);
+}
+
+template<class T>
+void topit::Vector<T>::erase(size_t pos)
+{
+	if (pos >= size_) {
+		throw;
+	}
+	if (size_ == 1) {
+		delete[] data_;
+		size_ = 0;
+		capacity_ = 0;
+		return;
+	}
+	Vector<T> cpy(*this);
+	try {
+		for(size_t i = pos; i < size_ - 1; i++) {
+			cpy.data_[i] = cpy.data_[i + 1];
+		}
+	} catch(...) {
+		throw;
+	}
+	this->swap(cpy);
+	size_ = size_ - 1;
 }
 #endif

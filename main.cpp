@@ -149,6 +149,20 @@ bool test17() {
 		return true;
 	}
 }
+bool test18() {
+	Vector< int > v(3, 0);
+	v.erase(1);
+	return v.getSize() == 2;
+}
+bool test19() {
+	Vector< int > v(3, 0);
+	v.erase(1);
+	try {
+		return !(v.at(2) == 0);
+	} catch(...) {
+		return true;
+	}
+}
 
 int main()
 {
@@ -171,7 +185,9 @@ int main()
         {test14, "Insert out of range generate exception"},
         {test15, "Insert part of another vector"},
         {test16, "insert another vector generate out of range because bad insert-pos"},
-        {test17, "insert another vector generate out of range because bad insert-range"}
+        {test17, "insert another vector generate out of range because bad insert-range"},
+        {test18, "Erase make less size"},
+        {test19, "erase really delete one element"}
     };
     size_t count = sizeof(tests) / sizeof(case_t);
     std::cout << std::boolalpha;
