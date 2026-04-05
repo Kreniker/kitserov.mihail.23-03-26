@@ -5,6 +5,47 @@
 #include <stdexcept>
 namespace topit 
 {
+	template< class T >
+	struct VectorIterator
+	{
+		VectorIterator(T* ptr);
+		T&  operator*() const noexcept;
+		T* operator->() const noexcept;
+		VectorIterator& operator++();
+		VectorIterator& operator--();
+		VectorIterator operator+(size_t n);
+		VectorIterator operator-(size_t n);
+		T& operator[](size_t n) const;
+		bool operator==(const VectorIterator& other) const { return ptr_ == other.ptr_; }
+	    bool operator!=(const VectorIterator& other) const { return ptr_ != other.ptr_; }
+	    bool operator<(const VectorIterator& other) const { return ptr_ < other.ptr_; }
+	    bool operator>(const VectorIterator& other) const { return ptr_ > other.ptr_; }
+	    bool operator<=(const VectorIterator& other) const { return ptr_ <= other.ptr_; }
+	    bool operator>=(const VectorIterator& other) const { return ptr_ >= other.ptr_; }
+	
+	  private:
+	    T* ptr_;
+	};
+	template<class T>
+	struct ConstVectorIterator
+	{
+		ConstVectorIterator(const T* ptr = nullptr) : ptr_(ptr) {}
+		T& operator*() const { return *ptr_; }
+		T*   operator->() const { return ptr_; }
+		ConstVectorIterator& operator++() { ++ptr_; return *this; }
+		ConstVectorIterator& operator--() { --ptr_; return *this; }
+    	ConstVectorIterator operator+(size_t n) const { return ConstVectorIterator(ptr_ + n); }
+	    ConstVectorIterator operator-(size_t n) const { return ConstVectorIterator(ptr_ - n); }
+	    T& operator[](size_t n) const { return ptr_[n]; }
+	    bool operator==(const ConstVectorIterator& other) const { return ptr_ == other.ptr_; }
+		bool operator!=(const ConstVectorIterator& other) const { return ptr_ != other.ptr_; }
+    	bool operator<(const ConstVectorIterator& other) const { return ptr_ < other.ptr_; }
+	    bool operator>(const ConstVectorIterator& other) const { return ptr_ > other.ptr_; }
+	    bool operator<=(const ConstVectorIterator& other) const { return ptr_ <= other.ptr_; }
+	    bool operator>=(const ConstVectorIterator& other) const { return ptr_ >= other.ptr_; }
+	private:
+		const T* ptr_;	
+	};
     template < class T >
     struct Vector
     {
@@ -280,5 +321,53 @@ void topit::Vector<T>::erase(size_t pos)
 	}
 	this->swap(cpy);
 	size_ = size_ - 1;
+}
+/////////////////////////////////////////////////////////////////////
+template<class T>
+topit::VectorIterator<T>::VectorIterator(T* ptr) : ptr_(ptr)
+{}
+
+template<class T>
+T& topit::VectorIterator<T>::operator*() const noexcept
+{
+	return *ptr_;
+}
+
+template<class T>
+T* topit::VectorIterator<T>::operator->() const noexcept
+{
+	return ptr_;
+}
+
+template<class T>
+topit::VectorIterator<T>& topit::VectorIterator<T>::operator++()
+{
+	++ptr_;
+	return *this;
+}
+
+template<class T>
+topit::VectorIterator<T>& topit::VectorIterator<T>::operator--()
+{
+	--ptr_;
+	return *this;
+}
+
+template<class T>
+topit::VectorIterator<T> topit::VectorIterator<T>::operator+(size_t n)
+{
+	return VectorIterator(ptr_ + n);
+}
+
+template<class T>
+topit::VectorIterator<T> topit::VectorIterator<T>::operator-(size_t n)
+{
+	return VectorIterator(ptr_ - n);
+}
+
+template<class T>
+T& topit::VectorIterator<T>::operator[](size_t n) const
+{
+	return ptr_[n];
 }
 #endif
