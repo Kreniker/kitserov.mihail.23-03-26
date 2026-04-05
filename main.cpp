@@ -109,6 +109,46 @@ bool test12() {
 	yav = std::move(v);
 	return yav == cpy_v;
 }
+bool test13() {
+	Vector< int > v(2, 0);
+	v.insert(1, 1);
+	return v[0] == 0 && v[1] == 1 && v[2] == 0;
+}
+bool test14() {
+	Vector< int > v(2, 0);
+	try {
+		v.insert(3, 1);
+		return false;
+	} catch(...) {
+		return true;
+	}
+}
+bool test15() {
+	Vector< int > v(2, 0);
+	Vector< int > yav(4, 2);
+	v.insert(1, yav, 1, 3);
+	return v[0] == 0 && v[1] == 2 && v[2] == 2 && v[3] == 0;
+}
+bool test16() {
+	Vector< int > v(2, 0);
+	Vector< int > yav(4, 2);
+	try {
+		v.insert(5, yav, 1, 3);
+		return false;
+	} catch(...) {
+		return true;
+	}
+}
+bool test17() {
+	Vector< int > v(2, 0);
+	Vector< int > yav(4, 2);
+	try {
+		v.insert(1, yav, 1, 6);
+		return false;
+	} catch(...) {
+		return true;
+	}
+}
 
 int main()
 {
@@ -126,7 +166,12 @@ int main()
         {test9, "copy assignment operator"},
         {test10, "Swap for two vectors"},
         {test11, "Move construstor"},
-        {test12, "move assignment operator"}
+        {test12, "move assignment operator"},
+        {test13, "Insert one element"},
+        {test14, "Insert out of range generate exception"},
+        {test15, "Insert part of another vector"},
+        {test16, "insert another vector generate out of range because bad insert-pos"},
+        {test17, "insert another vector generate out of range because bad insert-range"}
     };
     size_t count = sizeof(tests) / sizeof(case_t);
     std::cout << std::boolalpha;
