@@ -201,4 +201,30 @@ topit::Vector<T>& topit::Vector<T>::operator=(Vector<T>&& rhs) noexcept
 	swap(cpy);
 	return *this;
 }
+
+template<class T>
+void topit::Vector<T>::insert(size_t pos, const T& val)
+{
+	if (pos > size_) {
+		throw std::out_of_range("Invalid pos for insert");
+	}
+	T* new_data = nullptr;
+	if (capacity_ == size_) {
+		new_data = new T[capacity_ * 2];
+	}
+	try {
+		for (size_t i = 0; i < pos; i++) {
+			new_data[i] = data_[i];
+		}
+		new_data[pos] = val;
+		for (size_t i = pos; i < size_; i++) {
+			new_data[i + 1] = data_[i];
+		}
+	} catch(...) {
+		delete[] new_data;
+		throw;
+	}
+	data_ = new_data;
+	size_ = size_ + 1;
+}
 #endif
